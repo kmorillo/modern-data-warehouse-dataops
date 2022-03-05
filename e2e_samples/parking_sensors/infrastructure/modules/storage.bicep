@@ -1,10 +1,15 @@
 param project string
+@description('The name of the environment. This must be dev, test, or prod.')
 @allowed([
   'dev'
   'stg'
   'prod'
 ])
 param env string
+
+@description('The tags to apply to the resource')
+param tags object
+
 param location string = resourceGroup().location
 param deployment_id string
 param contributor_principal_id string
@@ -15,10 +20,7 @@ var storage_blob_data_contributor = '/subscriptions/${subscription().subscriptio
 resource storage 'Microsoft.Storage/storageAccounts@2021-04-01' = {
   name: '${project}st${env}${deployment_id}'
   location: location
-  tags: {
-    DisplayName: 'Data Lake Storage'
-    Environment: env
-  }
+  tags: tags
   sku: {
     name: 'Standard_LRS'
   }

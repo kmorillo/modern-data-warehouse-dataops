@@ -51,7 +51,7 @@ az account set --subscription "$AZURE_SUBSCRIPTION_ID"
 # Create resource group
 resource_group_name="$PROJECT-$DEPLOYMENT_ID-$ENV_NAME-rg"
 echo "Creating resource group: $resource_group_name"
-az group create --name "$resource_group_name" --location "$AZURE_LOCATION" --tags Environment="$ENV_NAME"
+az group create --name "$resource_group_name" --location "$AZURE_LOCATION" --tags Environment="$ENV_NAME" Owner="Kevin Morillo" Description="Kevin Morillo DQSF"
 
 # By default, set all KeyVault permission to deployer
 # Retrieve KeyVault User Id

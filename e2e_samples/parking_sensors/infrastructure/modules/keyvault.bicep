@@ -1,10 +1,15 @@
 param project string
+@description('The name of the environment. This must be dev, test, or prod.')
 @allowed([
   'dev'
   'stg'
   'prod'
 ])
 param env string
+
+@description('The tags to apply to the resource')
+param tags object
+
 param location string = resourceGroup().location
 param deployment_id string
 
@@ -15,15 +20,13 @@ param datafactory_principal_id string
 resource keyvault 'Microsoft.KeyVault/vaults@2019-09-01' = {
   name: '${project}-kv-${env}-${deployment_id}'
   location: location
-  tags: {
-    DisplayName: 'Keyvault'
-    Environment: env
-  }
+  tags: tags
   properties: {
     sku: {
       family: 'A'
       name: 'standard'
     }
+    enableSoftDelete: false
     enabledForTemplateDeployment: true
     tenantId: subscription().tenantId
     accessPolicies: [

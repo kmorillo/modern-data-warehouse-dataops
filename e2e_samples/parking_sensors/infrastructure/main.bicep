@@ -1,10 +1,22 @@
 param project string = 'mdwdo'
-param env string = 'dev'
+@description('The name of the environment. This must be dev, test, or prod.')
+@allowed([
+  'dev'
+  'stg'
+  'prod'
+])
+param env string
+
+@description('The tags to apply to the resource')
+param global_tags object
+
 param location string = resourceGroup().location
 param deployment_id string
 param keyvault_owner_object_id string
 @secure()
 param sql_server_password string
+
+param dbx_tier string = 'trial'
 
 
 module datafactory './modules/datafactory.bicep' = {
@@ -12,6 +24,7 @@ module datafactory './modules/datafactory.bicep' = {
   params: {
     project: project
     env: env
+    tags: global_tags
     location: location
     deployment_id: deployment_id
   }
@@ -22,6 +35,8 @@ module databricks './modules/databricks.bicep' = {
   params: {
     project: project
     env: env
+    dbx_tier: dbx_tier
+    tags: global_tags
     location: location
     deployment_id: deployment_id
     contributor_principal_id: datafactory.outputs.datafactory_principal_id
@@ -33,6 +48,7 @@ module storage './modules/storage.bicep' = {
   params: {
     project: project
     env: env
+    tags: global_tags
     location: location
     deployment_id: deployment_id
     contributor_principal_id: datafactory.outputs.datafactory_principal_id
@@ -44,6 +60,7 @@ module synapse_sql_pool './modules/synapse_sql_pool.bicep' = {
   params: {
     project: project
     env: env
+    tags: global_tags
     location: location
     deployment_id: deployment_id
     sql_server_password: sql_server_password
@@ -55,6 +72,7 @@ module keyvault './modules/keyvault.bicep' = {
   params: {
     project: project
     env: env
+    tags: global_tags
     location: location
     deployment_id: deployment_id
     keyvault_owner_object_id: keyvault_owner_object_id
@@ -71,6 +89,7 @@ module appinsights './modules/appinsights.bicep' = {
   params: {
     project: project
     env: env
+    tags: global_tags
     location: location
     deployment_id: deployment_id
   }

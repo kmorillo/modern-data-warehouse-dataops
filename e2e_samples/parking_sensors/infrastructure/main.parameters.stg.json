@@ -4,6 +4,16 @@
     "parameters": {
       "env": {
         "value": "stg"
+      },
+      "dbx_tier": {
+          "value": "trial"
+      },
+      "global_tags": {
+          "value": {
+              "Description": "Kevin Morillo DQSF",
+              "Owner": "Kevin Morillo",
+              "Environment": "stg"
+          }
       }
     }
   }

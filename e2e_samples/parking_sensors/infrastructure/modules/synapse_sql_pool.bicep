@@ -1,5 +1,15 @@
 param project string
+@description('The name of the environment. This must be dev, test, or prod.')
+@allowed([
+  'dev'
+  'stg'
+  'prod'
+])
 param env string
+
+@description('The tags to apply to the resource')
+param tags object
+
 param location string = resourceGroup().location
 param deployment_id string
 
@@ -11,10 +21,7 @@ param sql_server_password string
 resource sql_server 'Microsoft.Sql/servers@2021-02-01-preview' = {
   name: '${project}-sql-${env}-${deployment_id}'
   location: location
-  tags: {
-    DisplayName: 'SQL Server'
-    Environment: env
-  }
+  tags: tags
   properties: {
     administratorLogin: sql_server_username
     administratorLoginPassword: sql_server_password
@@ -23,10 +30,7 @@ resource sql_server 'Microsoft.Sql/servers@2021-02-01-preview' = {
   resource synapse_dedicated_sql_pool 'databases@2021-02-01-preview' = {
     name: '${project}-syndp-${env}-${deployment_id}'
     location: location
-    tags: {
-      DisplayName: 'Synapse Dedicated SQL Pool'
-      Environment: env
-    }
+    tags: tags
     sku: {
       name: 'DW100c'
       tier: 'DataWarehouse'

@@ -1,10 +1,15 @@
 param project string
+@description('The name of the environment. This must be dev, test, or prod.')
 @allowed([
   'dev'
   'stg'
   'prod'
 ])
 param env string
+
+@description('The tags to apply to the resource')
+param tags object
+
 param location string = resourceGroup().location
 param deployment_id string
 
@@ -16,10 +21,7 @@ param deployment_id string
 resource datafactory 'Microsoft.DataFactory/factories@2018-06-01' = {
   name: '${project}-adf-${env}-${deployment_id}'
   location: location
-  tags: {
-    DisplayName: 'Data Factory'
-    Environment: env
-  }
+  tags: tags
   identity: {
     type: 'SystemAssigned'
   }
