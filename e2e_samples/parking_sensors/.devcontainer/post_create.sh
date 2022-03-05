@@ -9,3 +9,7 @@ if [ -f "../e2e_samples/parking_sensors/src/ddo_transform/requirements_dev.txt" 
 elif [ -f "e2e_samples/parking_sensors/src/ddo_transform/requirements_dev.txt" ]; then
     pip install -r e2e_samples/parking_sensors/src/ddo_transform/requirements_dev.txt
 fi
+
+
+## git config --global user.email "kmorillo@users.noreply.github.com"
+####
