@@ -33,7 +33,7 @@ github_repo_url="https://github.com/$GITHUB_REPO"
 ###################
 # DEPLOY ALL FOR EACH ENVIRONMENT
 
-#TODO: Allow Dev QA PROD
+##TODO: Allow Dev QA PROD
 # for env_name in dev stg prod; do  # dev stg prod
 for env_name in dev; do  # dev stg prod
     PROJECT=$project \

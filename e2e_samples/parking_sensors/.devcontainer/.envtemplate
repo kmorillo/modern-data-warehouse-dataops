@@ -16,6 +16,11 @@ GITHUB_REPO=
 
 # a Github PAT token. Generate them [here](https://github.com/settings/tokens). This requires "repo" scope.
 GITHUB_PAT_TOKEN=
+# Azure tenant id to use for azure login.
+AZURE_TENANT_ID=
+
+# Azure subscription id to use to deploy resources. Default: default azure subscription.
+AZURE_SUBSCRIPTION_ID=
 
 
 ###
@@ -25,8 +30,6 @@ GITHUB_PAT_TOKEN=
 # Azure location to deploy resources. Default: westus
 # AZURE_LOCATION=
 
-# Azure subscription id to use to deploy resources. Default: default azure subscription.
-# AZURE_SUBSCRIPTION_ID=
 
 # String appended to all resource names to ensure uniqueness of azure resource names. Default: random five character string
 # DEPLOYMENT_ID=

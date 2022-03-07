@@ -1,11 +1,14 @@
 #!/usr/bin/env bash
 
 #TODO add these to init script with variables
-export AZURE_LOCATION="westus"
-export TENANT_ID="b7c4d562-d8f6-47ee-bab9-b9ee602bc6f0"
-export AZDO_PIPELINES_BRANCH_NAME="deploy1"
+# export AZURE_LOCATION="westus"
+# export AZURE_TENANT_ID="b7c4d562-d8f6-47ee-bab9-b9ee602bc6f0"
+# export AZDO_PIPELINES_BRANCH_NAME="deploy1"
 
-echo $AZURE_LOCATION
+
+## Print out all environment variables currently set in dev container
+echo "All Environment Variables:"
+env -0 | sort -z | tr '\0' '\n'
 
 echo "Configure az devops cli"
 az devops configure --defaults organization="$AZDO_ORGANIZATION_URL" project="$AZDO_PROJECT"
@@ -18,7 +21,7 @@ echo "Install requirements depending if devcontainer was openned at root or in p
 } || { # catch
     # Assume opened at 'PARKING_SENSORS' folder, the below should work
     pip install -r ./src/ddo_transform/requirements_dev.txt
-    az login --tenant $TENANT_ID
+    az login --tenant $AZURE_TENANT_ID
     az account list --output table
 }
 echo 
