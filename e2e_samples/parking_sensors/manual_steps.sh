@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/bin/bash
 
 #TODO add these to init script with variables
 # export AZURE_LOCATION="westus"
@@ -30,7 +30,7 @@ echo
 ## az config set defaults.location=westus2 defaults.group=MyResourceGroup
 az group list --output table
 
-echo
+echo "########################"
 
 #git config --global user.email "kevin.morillo@tallan.com"
 #git config --global user.name "Kevin Morillo"
