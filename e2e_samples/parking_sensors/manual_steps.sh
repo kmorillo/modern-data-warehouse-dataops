@@ -13,14 +13,11 @@ env -0 | sort -z | tr '\0' '\n'
 echo "Configure az devops cli"
 az devops configure --defaults organization="$AZDO_ORGANIZATION_URL" project="$AZDO_PROJECT"
 
-echo "Install requirements depending if devcontainer was openned at root or in parking_sensor folder."
-
+echo "Login to Azure"
 { # try
     az account show --output table
     echo 
 } || { # catch
-    # Assume opened at 'PARKING_SENSORS' folder, the below should work
-    pip install -r ./src/ddo_transform/requirements_dev.txt
     az login --tenant $AZURE_TENANT_ID
     az account list --output table
 }
@@ -34,9 +31,6 @@ echo
 az group list --output table
 
 echo
-
-
-
 
 #git config --global user.email "kevin.morillo@tallan.com"
 #git config --global user.name "Kevin Morillo"
