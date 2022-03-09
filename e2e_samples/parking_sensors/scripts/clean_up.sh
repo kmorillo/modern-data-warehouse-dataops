@@ -54,36 +54,40 @@ if [[ -n $prefix ]]; then
     read -r -p "Do you wish to DELETE above? [y/N] " response
     case "$response" in
         [yY][eE][sS]|[yY]) 
+            echo "Run the follownig commands in the terminal"
+            echo ""
+            echo ""
+            echo ""
             echo "Delete pipelines the start with '$prefix' in name..."
             [[ -n $prefix ]] &&
                 az pipelines list -o tsv |
                 { grep "$prefix" || true; } |
                 awk '{print $4}' |
-                xargs -r -I % az pipelines delete --id % --yes
+                xargs -r -I % echo "az pipelines delete --id % --yes"
 
             echo "Delete variable groups the start with '$prefix' in name..."
             [[ -n $prefix ]] &&
                 az pipelines variable-group list -o tsv |
                 { grep "$prefix" || true; } | 
                 awk '{print $3}' |
-                xargs -r -I % az pipelines variable-group delete --id % --yes
+                xargs -r -I % echo "az pipelines variable-group delete --id % --yes"
 
             echo "Delete service connections the start with '$prefix' in name..."
             [[ -n $prefix ]] &&
                 az devops service-endpoint list -o tsv |
                 { grep "$prefix" || true; } |
                 awk '{print $3}' |
-                xargs -r -I % az devops service-endpoint delete --id % --yes
+                xargs -r -I % echo "az devops service-endpoint delete --id % --yes"
 
             echo "Delete service principal the start with '$prefix' in name, created by yourself..."
             [[ -n $prefix ]] &&
                 az ad sp list --query "[?contains(appDisplayName,'$prefix')].appId" -o tsv --show-mine | 
-                xargs -r -I % az ad sp delete --id %
+                xargs -r -I % echo "az ad sp delete --id %"
 
             echo "Delete resource group the start with '$prefix' in name..."
             [[ -n $prefix ]] &&
                 az group list --query "[?contains(name,'$prefix') && ! contains(name,'dbw')].name" -o tsv |
-                xargs -I % az group delete --verbose --name % -y
+                xargs -I % echo "az group delete --verbose --name % -y"
             ;;
         *)
             exit

@@ -48,16 +48,38 @@ createPipeline () {
     declare pipeline_name=$1
     declare pipeline_description=$2
     full_pipeline_name=$PROJECT-$pipeline_name
-    pipeline_id=$(az pipelines create \
-        --name "$full_pipeline_name" \
-        --description "$pipeline_description" \
-        --repository "$GITHUB_REPO_URL" \
-        --branch "$AZDO_PIPELINES_BRANCH_NAME" \
-        --yaml-path "/e2e_samples/parking_sensors/devops/azure-pipelines-$pipeline_name.yml" \
-        --service-connection "$github_sc_id" \
-        --skip-first-run true \
-        --output json | jq -r '.id')
+    
+    # pipeline_id= { $(az pipelines show --name "$full_pipeline_name" --output json | jq -r '.id' } ||
+    # if [$pipeline_id]
+    # then
+
+    # fi
+
+    { # try
+        pipeline_id=$(az pipelines create \
+            --name "$full_pipeline_name" \
+            --description "$pipeline_description" \
+            --repository "$GITHUB_REPO_URL" \
+            --branch "$AZDO_PIPELINES_BRANCH_NAME" \
+            --yaml-path "/e2e_samples/parking_sensors/devops/azure-pipelines-$pipeline_name.yml" \
+            --service-connection "$github_sc_id" \
+            --skip-first-run true \
+            --output json | jq -r '.id')
+    } || { # catch
+        pipeline_id=$(az pipelines update \
+            --name "$full_pipeline_name" \
+            --description "$pipeline_description" \
+            --repository "$GITHUB_REPO_URL" \
+            --branch "$AZDO_PIPELINES_BRANCH_NAME" \
+            --yaml-path "/e2e_samples/parking_sensors/devops/azure-pipelines-$pipeline_name.yml" \
+            --service-connection "$github_sc_id" \
+            --skip-first-run true \
+            --output json | jq -r '.id')
+    }
     echo "$pipeline_id"
+
+
+
 }
 
 # Build Pipelines
@@ -68,7 +90,14 @@ createPipeline "ci-artifacts" "This pipeline publishes build artifacts"
 # Release Pipelines
 cd_release_pipeline_id=$(createPipeline "cd-release" "This pipeline releases across environments")
 
-az pipelines variable create \
-    --name devAdfName \
-    --pipeline-id "$cd_release_pipeline_id" \
-    --value "$DEV_DATAFACTORY_NAME"
+{ # try
+    az pipelines variable create \
+        --name devAdfName \
+        --pipeline-id "$cd_release_pipeline_id" \
+        --value "$DEV_DATAFACTORY_NAME"
+} || { # catch
+    az pipelines variable update \
+        --name devAdfName \
+        --pipeline-id "$cd_release_pipeline_id" \
+        --value "$DEV_DATAFACTORY_NAME"
+}

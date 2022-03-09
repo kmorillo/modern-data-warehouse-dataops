@@ -1,9 +1,27 @@
 #!/bin/bash
 
-#TODO add these to init script with variables
-# export AZURE_LOCATION="westus"
-# export AZURE_TENANT_ID="b7c4d562-d8f6-47ee-bab9-b9ee602bc6f0"
-# export AZDO_PIPELINES_BRANCH_NAME="deploy1"
+##TODO:
+# General
+    # Add flag to allow override / drop and recreate all
+    # convert from bash to PowerShell scripts
+    # Hide sensitive info from logs and output
+    # log file instead of console
+
+# Init
+# Infra/ARM/Bicep
+    # setup rg & vnet first
+    # dbx - setup using templates w/ vnet integration https://docs.microsoft.com/en-us/azure/databricks/administration-guide/cloud-configurations/azure/vnet-inject#arm-vnet-only
+    # dbx - implement sp credentials to generate PAT 
+        # curl -X POST -H "Content-Type: application/x-www-form-urlencoded" -d "grant_type=client_credentials&client_id=<appid>&resource=https://management.core.windows.net/&client_secret=<secret>" https://login.microsoftonline.com/<tenantid>/oauth2/token
+        # then
+        # curl -X GET -H "Authorization: Bearer <token>" https://adb-3693162143392221.1.azuredatabricks.net/api/2.0/clusters/list
+    # kv - allow enableSoftDelete = false by allowing ignoring if existing key vault exists when running arm deploy
+    # sa - allow --overwrite
+    # syn - replace dedicated pool with full synapse deploy
+# DevOps
+    # Add option to skip DevOps pipeline deploy if they exist, or implement upsert.
+
+
 
 
 ## Print out all environment variables currently set in dev container
@@ -35,10 +53,22 @@ echo "########################"
 #git config --global user.email "kevin.morillo@tallan.com"
 #git config --global user.name "Kevin Morillo"
 
+{ #try
+    echo "Checking and removing existing purged key vault 'mdwdops-kv-dev-d01km'"
+    (az keyvault list-deleted) | grep '"name": "mdwdops-kv-dev-d01km"'
+    az keyvault purge -n 'mdwdops-kv-dev-d01km'
+} || { #catch
+    echo
+}
+
 ./deploy.sh
 
 
+# { # try
 
+# } || { # catch
+
+# }
 
 
 
